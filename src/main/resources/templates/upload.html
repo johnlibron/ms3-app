@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+	<style>
+		.table-container {
+			width: 1200px;
+			overflow: scroll;
+			height: 600px;
+		}
+	</style>
+	<title>MS3 Web Application</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<h1>CSV Records</h1>
+				<div class="alert alert-danger" role="alert" th:if="${!status}">
+					<strong>Error:</strong>
+					<span th:text="${message}"></span>
+				</div>
+				<div class="table-container">
+					<table class="table table-striped table-bordered" th:if="${status}">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">A</th>
+								<th scope="col">B</th>
+								<th scope="col">C</th>
+								<th scope="col">D</th>
+								<th scope="col">E</th>
+								<th scope="col">F</th>
+								<th scope="col">G</th>
+								<th scope="col">H</th>
+								<th scope="col">I</th>
+								<th scope="col">J</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="record, i : ${records}">
+								<th scope="row" th:text="${i.index + 1}"></th>
+								<td th:text="${record.A}"></td>
+								<td th:text="${record.B}"></td>
+								<td th:text="${record.C}"></td>
+								<td th:text="${record.D}"></td>
+								<td th:text="${record.E}"></td>
+								<td th:text="${record.F}"></td>
+								<td th:text="${record.G}"></td>
+								<td th:text="${record.H}"></td>
+								<td th:text="${record.I}"></td>
+								<td th:text="${record.J}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
