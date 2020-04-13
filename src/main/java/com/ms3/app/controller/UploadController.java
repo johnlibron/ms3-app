@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ms3.app.Ms3AppApplication;
-import com.ms3.app.model.Record;
+import com.ms3.app.entity.Record;
+import com.ms3.app.service.RecordService;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriterBuilder;
@@ -30,6 +32,9 @@ import com.opencsv.ICSVWriter;
 public class UploadController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Ms3AppApplication.class);
+	
+	@Autowired
+	private RecordService recordService;
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -80,7 +85,7 @@ public class UploadController {
 							throw new Exception("Header doesn't match the column required.");
 						}
 					} else {
-						if (record.length == headerRecord.length) {
+						if (record.length == headerRecord.length) {							
 							Record recordObj = new Record();
 							recordObj.setA(record[0]);
 							recordObj.setB(record[1]);
@@ -103,14 +108,16 @@ public class UploadController {
 					}
 				}
 				
+				records = recordService.saveAll(records);
+
+				model.addAttribute("records", records);
+				model.addAttribute("status", true);
+				
 				recordsReceived = recordsSuccessful + recordsFailed;
 				
 				logger.info(recordsReceived + " of records received");
 				logger.info(recordsSuccessful + " of records successful");
 				logger.info(recordsFailed + " of records failed");
-
-				model.addAttribute("records", records);
-				model.addAttribute("status", true);
 				
 				csvReader.close();
 				reader.close();

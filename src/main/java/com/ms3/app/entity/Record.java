@@ -1,7 +1,23 @@
-package com.ms3.app.model;
+package com.ms3.app.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.stereotype.Component;
+
+@Component
+@Entity
+@Table(name = "TB_RECORD")
+@DynamicInsert
 public class Record {
 
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	private int id;
 	private String A;
 	private String B;
 	private String C;
@@ -13,6 +29,12 @@ public class Record {
 	private String I;
 	private String J;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getA() {
 		return A;
 	}
@@ -73,11 +95,11 @@ public class Record {
 	public void setJ(String j) {
 		this.J = j;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Record [A=" + A + ", B=" + B + ", C=" + C + ", D=" + D + ", E=" + E + ", F=" + F + ", G=" + G + ", H="
-				+ H + ", I=" + I + ", J=" + J + "]";
+		return "Record [id=" + id + ", A=" + A + ", B=" + B + ", C=" + C + ", D=" + D + ", E=" + E + ", F=" + F + ", G="
+				+ G + ", H=" + H + ", I=" + I + ", J=" + J + "]";
 	}
 	
 }
