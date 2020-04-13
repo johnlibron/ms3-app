@@ -73,19 +73,6 @@ public class Record {
 	public void setJ(String j) {
 		this.J = j;
 	}
-	
-	public boolean isEmpty() {
-		return (null == A || A.isEmpty()) &&
-				(null == B || B.isEmpty()) &&
-				(null == C || C.isEmpty()) &&
-				(null == D || D.isEmpty()) &&
-				(null == E || E.isEmpty()) &&
-				(null == F || F.isEmpty()) &&
-				(null == G || G.isEmpty()) &&
-				(null == H || H.isEmpty()) &&
-				(null == I || I.isEmpty()) &&
-				(null == J || J.isEmpty());
-	}
 
 	@Override
 	public String toString() {

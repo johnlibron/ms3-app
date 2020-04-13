@@ -21,8 +21,8 @@
 					<strong>Error:</strong>
 					<span th:text="${message}"></span>
 				</div>
-				<div class="table-container">
-					<table class="table table-striped table-bordered" th:if="${status}">
+				<div class="table-container" th:if="${status}">
+					<table class="table table-striped table-bordered">
 						<thead>
 							<tr>
 								<th scope="col">#</th>

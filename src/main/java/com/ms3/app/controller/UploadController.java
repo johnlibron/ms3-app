@@ -3,7 +3,11 @@ package com.ms3.app.controller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -14,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ms3.app.model.Record;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 
 @Controller
 public class UploadController {
@@ -34,40 +39,65 @@ public class UploadController {
 			model.addAttribute("message", "Please select a CSV file to upload.");
 			model.addAttribute("status", false);
 		} else {
-			
 			// parse CSV file to create a list of 'record' objects
 			try {
+			    // columns names
+				String[] headerRecord = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+				
 				// create a reader
 				Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 				
-				// columns name
-				String[] columns = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+				// create CSV reader
+				CSVReader csvReader = new CSVReaderBuilder(reader).build();
+				
+				// create a write
+				Writer writer = Files.newBufferedWriter(Paths.get("ms3Interview-bad.csv"));
+			    
+			    // create a CSV writer
+			    ICSVWriter csvWriter = new CSVWriterBuilder(writer).build();
+			    
+			    // write header record
+			    csvWriter.writeNext(headerRecord);
+			    
+			    List<Record> records = new ArrayList<>();
+			    
+			    Boolean checkHeader = null;
 
-				// create a mapping strategy
-				ColumnPositionMappingStrategy<Record> strategy = new ColumnPositionMappingStrategy<Record>();
-				strategy.setType(Record.class);
-				strategy.setColumnMapping(columns);
-				
-				// create CSV bean reader
-				CsvToBean<Record> csvToBean = new CsvToBeanBuilder<Record>(reader)
-						.withMappingStrategy(strategy)
-						.withSkipLines(1)
-						.withIgnoreLeadingWhiteSpace(true)
-						.build();
-				
-				List<Record> records = new ArrayList<>();
-				
-				// iterate through list of records
-				for (Record record : (Iterable<Record>) csvToBean) {
-					if (!record.isEmpty()) {
-						records.add(record);
-					}
-				}
+			    // iterate through list of records
+			    for (String[] record : csvReader.readAll()) {
+			    	if (null == checkHeader) {
+			    		checkHeader = Arrays.equals(record, headerRecord);
+		    			if (!checkHeader) {
+		    				throw new Exception("Header doesn't match the column required.");
+		    			}
+			    	} else {
+				    	if (record.length == headerRecord.length) {
+				    		Record recordObj = new Record();
+					    	recordObj.setA(record[0]);
+					    	recordObj.setB(record[1]);
+					    	recordObj.setC(record[2]);
+					    	recordObj.setD(record[3]);
+					    	recordObj.setE(record[4]);
+					    	recordObj.setF(record[5]);
+					    	recordObj.setG(record[6]);
+					    	recordObj.setH(record[7]);
+					    	recordObj.setI(record[8]);
+					    	recordObj.setJ(record[9]);
+					    	records.add(recordObj);
+				    	} else {
+				    		csvWriter.writeNext(record);
+				    	}
+			    	}
+			    }
 
 				model.addAttribute("records", records);
 				model.addAttribute("status", true);
 				
+				csvReader.close();
 				reader.close();
+				
+				csvWriter.close();
+				writer.close();
 				
 			} catch (Exception e) {
 				model.addAttribute("message", "An error occurred while processing the CSV file.");
