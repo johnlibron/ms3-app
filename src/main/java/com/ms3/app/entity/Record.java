@@ -7,11 +7,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.stereotype.Component;
 
-@Component
 @Entity
 @Table(name = "TB_RECORD")
+
+// To increase speed and save SQL statement execution time
 @DynamicInsert
 public class Record {
 
