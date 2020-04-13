@@ -9,7 +9,7 @@
 		<version>2.2.6.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ms3.springboot</groupId>
+	<groupId>com.ms3.app</groupId>
 	<artifactId>ms3-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ms3-app</name>
